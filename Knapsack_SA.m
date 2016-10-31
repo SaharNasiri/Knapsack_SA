@@ -2,9 +2,8 @@ clc; clear all; close all;
 
 %-------------Problem Definition------------%
 
-load('D:\Sahar\QIAU\Evolutionary Process\Knapstack_SA\Objects.mat');
+load('Object.mat');
 Bag = 30;
-%nObjects = size(Objects, 2);
 ChooseFunc = @(objects) Choose(objects, Bag);
 
 %-------Parameters---------%
@@ -14,10 +13,18 @@ maxItPerTemp = 10;
 T0 = 100;
 alpha = 0.95;
 
-%-------Initialization---------%
+figure;
+%hold on;
+%C = {'b','r','g','y', 'k', 'm', 'c', 'w',[.5 .6 .7],[.8 .2 .6]}; % Cell array of colros.
+%colors=['+'; 'o'; '*'; 's'];
+%cmap = colormap(parula(10));
+%x = 0:.01:1; 
 
+%-------Initialization---------%
+%for j=1:2
+    %alpha = alpha - 0.1;
+    %T0 = T0 - 200;
 solution = ChooseFunc(Object);
-TotalWeight(solution)
 bag_equipment = solution;
 currentValue = TotalValue(bag_equipment);
 bestSolution = bag_equipment;
@@ -26,11 +33,11 @@ T = T0;
 
 %-------Main Loop---------%
 
+
 for it=1:maxIt
     for t=1:maxItPerTemp
         solution = CreateNeighbor(bag_equipment, Bag);
         if TotalWeight(solution) > Bag
-            disp('aaaaaaaaaaaaaaaaaaa')
         end
         newValue = TotalValue(solution);
         delta = newValue - currentValue;
@@ -51,25 +58,23 @@ for it=1:maxIt
     bestValue(it) = TotalValue(bestSolution);
     disp(['Iteration: ' num2str(it) ' Best Value: ' num2str(bestValue(it))]);
     disp('Best Bag = ');
-result = [];
-for i=1:numel(bestSolution)
+    result = [];
+    for i=1:numel(bestSolution)
     
-    if bestSolution(i).situation == 1
-        result = [result bestSolution(i).weight];
+        if bestSolution(i).situation == 1
+            result = [result bestSolution(i).weight];
+        end
     end
-end
-result
-sum(result)
     T = alpha*T;
 end
 
 %-------Result---------%
 
-figure;
+%plot(bestValue, 'color',C{j},'marker','o');
 plot(bestValue);
 xlabel('Iteration');
 ylabel('Bag_Value');
-hold on;
+
 
 disp('Best Bag = ');
 result = [];
